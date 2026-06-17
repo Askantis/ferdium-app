@@ -8,7 +8,7 @@ import * as legacyStyles from '../legacy';
 export default (brandPrimary: string) => {
   if (!brandPrimary) {
     // eslint-disable-next-line no-param-reassign
-    brandPrimary = '#7266F0';
+    brandPrimary = '#E0567E'; // Sophie Rose
   }
   const brandSuccess = '#5cb85c';
   const brandInfo = '#5bc0de';

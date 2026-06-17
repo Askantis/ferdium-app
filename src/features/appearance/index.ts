@@ -129,9 +129,10 @@ const generateAccentStyle = (accentColorStr, useHorizontalStyle) => {
       border-color: ${accentColorStr};
     }
 
-    .tab-item.is-active {
-      background: ${accentColor.lightness(90).hex()};
-      box-shadow: inset ${useHorizontalStyle ? '0 4px' : '4px 0'} 0 0 ${accentColorStr};
+    :root {
+      --ak-accent: ${accentColorStr};
+      --ak-accent-2: ${darkenAbsolute(accentColor, 12).hex()};
+      --ak-accent-rgb: ${accentColor.rgb().round().array().join(', ')};
     }
   `;
 };
@@ -566,6 +567,61 @@ const updateStyle = (settings, app) => {
   updateProgressbar(appSettings);
 };
 
+// --- Sophie: ambient background gradient tinted by the active service's icon ---
+const iconColorCache = new Map<string, string | null>();
+
+const sampleIconColor = (url: string): Promise<string | null> =>
+  new Promise(resolve => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.addEventListener('load', () => {
+      try {
+        const size = 16;
+        const canvas = document.createElement('canvas');
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          resolve(null);
+          return;
+        }
+        ctx.drawImage(img, 0, 0, size, size);
+        const { data } = ctx.getImageData(0, 0, size, size);
+        let r = 0;
+        let g = 0;
+        let b = 0;
+        let n = 0;
+        for (let i = 0; i < data.length; i += 4) {
+          if (data[i + 3] < 32) continue; // skip transparent
+          const sum = data[i] + data[i + 1] + data[i + 2];
+          if (sum > 735 || sum < 40) continue; // skip near-white / near-black
+          r += data[i];
+          g += data[i + 1];
+          b += data[i + 2];
+          n += 1;
+        }
+        resolve(
+          n > 0
+            ? `${Math.round(r / n)}, ${Math.round(g / n)}, ${Math.round(b / n)}`
+            : null,
+        );
+      } catch {
+        resolve(null); // tainted canvas (cross-origin favicon) etc.
+      }
+    });
+    img.addEventListener('error', () => resolve(null));
+    img.src = url;
+  });
+
+const setBackgroundRgb = (rgb: string | null) => {
+  const root = document.documentElement;
+  if (rgb) {
+    root.style.setProperty('--ak-bg-rgb', rgb);
+  } else {
+    root.style.removeProperty('--ak-bg-rgb'); // falls back to Sophie Rose
+  }
+};
+
 export default function initAppearance(stores) {
   const { settings, app } = stores;
   createStyleElement();
@@ -621,6 +677,29 @@ export default function initAppearance(stores) {
     ],
     () => {
       updateStyle(settings, app);
+    },
+    { fireImmediately: true },
+  );
+
+  // Sophie: tint the ambient background gradient with the active service's icon colour
+  reaction(
+    () => stores.services.active?.icon ?? null,
+    icon => {
+      if (!icon) {
+        setBackgroundRgb(null);
+        return;
+      }
+      if (iconColorCache.has(icon)) {
+        setBackgroundRgb(iconColorCache.get(icon) ?? null);
+        return;
+      }
+      sampleIconColor(icon).then(rgb => {
+        iconColorCache.set(icon, rgb);
+        // Only apply if this service is still the active one
+        if ((stores.services.active?.icon ?? null) === icon) {
+          setBackgroundRgb(rgb);
+        }
+      });
     },
     { fireImmediately: true },
   );

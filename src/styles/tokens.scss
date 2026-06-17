@@ -1,0 +1,61 @@
+// Sophie design tokens — single source of truth for the redesign.
+// Plain CSS custom properties so they can be overridden at runtime (dark mode +
+// the appearance injector) without re-emitting whole rule blocks.
+// See docs/askantis/01-design-overhaul.md.
+
+:root {
+  // Shape (Bold card style)
+  --ak-radius: 8px;
+  --ak-radius-card: 16px;
+  --ak-radius-lg: 20px;
+  --ak-card-gap: 6px;
+
+  // Brand accent — Sophie Rose (inspired by Duchess Sophie's pink salon at Konopiště)
+  --ak-accent: #e0567e;
+  --ak-accent-2: #c0436a;
+  --ak-accent-rgb: 224, 86, 126;
+  --ak-accent-gradient: linear-gradient(140deg, var(--ak-accent), var(--ak-accent-2));
+  --ak-on-accent: #ffffff;
+
+  // Surfaces (light)
+  --ak-surface: #ffffff; // app / service card
+  --ak-surface-recessed: #eceef3; // gutter behind the cards
+  --ak-surface-card: #ffffff;
+  --ak-surface-tab: rgba(0, 0, 0, 0.04); // resting service tab card
+  --ak-surface-tab-hover: rgba(0, 0, 0, 0.07);
+  --ak-border-soft: rgba(0, 0, 0, 0.06);
+
+  // Elevation
+  --ak-elevation: 0 4px 14px rgba(192, 67, 106, 0.3); // active accent card
+  --ak-elevation-soft: 0 2px 10px rgba(0, 0, 0, 0.08);
+
+  // Ambient background gradient (behind the cards).
+  // --ak-bg-rgb is swapped at runtime to the active service's icon colour (Phase 2);
+  // defaults to Sophie Rose. Kept soft so cards + text stay legible.
+  --ak-bg-rgb: var(--ak-accent-rgb);
+  --ak-bg-gradient: linear-gradient(
+    160deg,
+    rgba(var(--ak-bg-rgb), 0.1) 0%,
+    rgba(var(--ak-bg-rgb), 0.03) 55%,
+    rgba(var(--ak-bg-rgb), 0) 100%
+  );
+}
+
+.theme__dark {
+  --ak-surface: #1e1e1e;
+  --ak-surface-recessed: #1a1a1a;
+  --ak-surface-card: #2d2f31;
+  --ak-surface-tab: rgba(255, 255, 255, 0.05);
+  --ak-surface-tab-hover: rgba(255, 255, 255, 0.09);
+  --ak-border-soft: rgba(255, 255, 255, 0.08);
+
+  --ak-elevation: 0 4px 14px rgba(0, 0, 0, 0.45);
+  --ak-elevation-soft: 0 2px 10px rgba(0, 0, 0, 0.35);
+
+  --ak-bg-gradient: linear-gradient(
+    160deg,
+    rgba(var(--ak-bg-rgb), 0.18) 0%,
+    rgba(var(--ak-bg-rgb), 0.05) 55%,
+    rgba(var(--ak-bg-rgb), 0) 100%
+  );
+}

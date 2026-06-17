@@ -9,6 +9,7 @@ import {
   mdiLock,
   mdiMenu,
   mdiPlusBox,
+  mdiStar,
   mdiViewGrid,
   mdiViewSplitVertical,
 } from '@mdi/js';
@@ -31,6 +32,7 @@ import {
   todosToggleShortcutKey,
   workspaceToggleShortcutKey,
 } from '../../environment';
+import { state as favoritesState } from '../../features/favorites/store';
 import { todosStore } from '../../features/todos';
 import { todoActions } from '../../features/todos/actions';
 import globalMessages from '../../i18n/globalMessages';
@@ -367,6 +369,20 @@ class Sidebar extends Component<IProps, IState> {
             )} (${downloadsShortcutKey(false)})`}
           >
             <Icon icon={mdiDownload} size={1.8} />
+          </button>
+        ) : null}
+
+        {!isMenuCollapsed ? (
+          <button
+            type="button"
+            onClick={() => {
+              favoritesState.isModalVisible = true;
+            }}
+            className="sidebar__button sidebar__button--favorites"
+            data-tooltip-id="tooltip-sidebar-button"
+            data-tooltip-content="Favorites"
+          >
+            <Icon icon={mdiStar} size={1.5} />
           </button>
         ) : null}
 

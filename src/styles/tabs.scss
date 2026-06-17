@@ -4,7 +4,11 @@
   color: $dark-theme-text-color;
 
   &.is-active {
-    background: $dark-theme-gray;
+    background: var(--ak-accent-gradient);
+
+    .tab-item__label {
+      color: var(--ak-on-accent);
+    }
   }
 
   &.is-disabled .tab-item__icon {
@@ -32,21 +36,29 @@
   position: relative;
   flex-direction: column;
   @media (prefers-reduced-motion: no-preference) {
-    transition: background $theme-transition-time;
+    transition:
+      background $theme-transition-time,
+      box-shadow 0.2s ease;
   }
-  width: $theme-sidebar-width;
+  width: calc(#{$theme-sidebar-width} - 16px);
+  margin: var(--ak-card-gap) 8px;
+  border-radius: var(--ak-radius-card);
+
+  &:hover:not(.is-active) {
+    background: var(--ak-surface-tab-hover);
+  }
 
   &.is-active {
-    background: change-color(
-      $theme-brand-primary,
-      $lightness: min(lightness($theme-brand-primary) * 1.35, 100)
-    );
-
-    box-shadow: inset 4px 0 0 0 $theme-brand-primary;
+    background: var(--ak-accent-gradient);
+    box-shadow: var(--ak-elevation);
 
     .tab-item__icon,
     .tab-item__label {
       margin-left: 0px;
+    }
+
+    .tab-item__label {
+      color: var(--ak-on-accent);
     }
   }
 

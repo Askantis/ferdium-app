@@ -32,10 +32,28 @@
 .recipes__navigation {
   height: auto;
   margin-bottom: 25px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 6px;
+  background: var(--ak-surface-recessed);
+  border-radius: var(--ak-radius);
 
   .badge {
-    margin-right: 10px;
-    margin-bottom: 10px;
+    margin-right: 0;
+    margin-bottom: 0;
+    cursor: pointer;
+    padding: 6px 14px;
+    border-radius: var(--ak-radius);
+
+    &:not(.badge--primary) {
+      background: transparent;
+    }
+
+    &.badge--primary {
+      background: var(--ak-accent-gradient);
+      color: var(--ak-on-accent);
+    }
   }
 
   &.recipes__navigation--disabled {

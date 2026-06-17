@@ -76,6 +76,32 @@ class TabBar extends Component<IProps> {
     }
   }
 
+  // Sophie: hover the service ribbon and scroll the wheel to flip between services
+  wheelAccumulator = 0;
+
+  lastWheelAt = 0;
+
+  handleWheel = (event: { deltaX: number; deltaY: number }) => {
+    const { services, setActive } = this.props;
+    if (!services || services.length < 2) {
+      return;
+    }
+    const delta = event.deltaY === 0 ? event.deltaX : event.deltaY;
+    this.wheelAccumulator += delta;
+    const now = Date.now();
+    // require a deliberate scroll and throttle switches (trackpads fire rapidly)
+    if (Math.abs(this.wheelAccumulator) < 30 || now - this.lastWheelAt < 120) {
+      return;
+    }
+    const dir = this.wheelAccumulator > 0 ? 1 : -1;
+    this.wheelAccumulator = 0;
+    this.lastWheelAt = now;
+    const activeIndex = services.findIndex(s => s.isActive);
+    const base = activeIndex === -1 ? 0 : activeIndex;
+    const nextIndex = (base + dir + services.length) % services.length;
+    setActive({ serviceId: services[nextIndex].id });
+  };
+
   render() {
     const {
       services,
@@ -97,7 +123,7 @@ class TabBar extends Component<IProps> {
     const axis = useHorizontalStyle ? 'x' : 'y';
 
     return (
-      <div>
+      <div onWheel={this.handleWheel}>
         <TabBarSortableList
           // @ts-expect-error Fix me
           services={services}

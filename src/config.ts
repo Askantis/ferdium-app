@@ -5,7 +5,7 @@ import { defineMessages } from 'react-intl';
 
 import { shiftKey } from './environment';
 
-export const DEFAULT_ACCENT_COLOR = '#7367F0';
+export const DEFAULT_ACCENT_COLOR = '#E0567E'; // Sophie Rose
 
 export const CHECK_INTERVAL = ms('1h'); // How often should we perform checks
 
