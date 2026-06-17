@@ -4,6 +4,36 @@ You installed Ferdium via Homebrew and set up 9 services. The locally-built app 
 **different data directory**, so out of the box it starts empty. This doc explains exactly why and
 gives you a safe copy procedure (including your logged-in sessions).
 
+## ⚙️ Current setup: shared profile via symlink (temporary dev override)
+
+Right now Sophie's dev data dir is **symlinked to the brew Ferdium profile**, so both apps share one
+set of services + logins. Only one app may be open at a time (Electron holds an exclusive
+`SingletonLock` on the dir):
+
+```
+~/Library/Application Support/SophieDev  ->  ~/Library/Application Support/Ferdium
+~/Library/Application Support/Sophie      ->  ~/Library/Application Support/Ferdium   (for a future packaged build)
+```
+
+A standalone backup of the earlier copy is kept at `SophieDev.standalone.bak` (safe to delete).
+
+**To revert to independent dirs:** `rm "~/Library/Application Support/SophieDev"` (removes only the
+symlink), then either restore the backup (`mv SophieDev.standalone.bak SophieDev`) or let Sophie
+create a fresh dir on next launch.
+
+### 📌 TODO (before release): Sophie should own its own data dir
+
+The symlink is a convenience for development only. The shipped product should use its **own** data
+dir (`Sophie` / `SophieDev`) and offer a proper one-time migration instead of piggybacking on
+Ferdium's:
+
+- On first launch, if `Sophie` doesn't exist but `Ferdium` does, prompt *"Import your Ferdium
+  setup?"* and **copy** (not symlink) — mirroring Ferdium's own Ferdi→Ferdium migration
+  (`src/stores/UserStore.ts:264-291`, `docs/MIGRATION.md`).
+- Optionally add a `SOPHIE_APPDATA_DIR` override (cf. `FERDIUM_APPDATA_DIR`,
+  `src/environment-remote.ts:21-23`) for power users.
+- Once that lands, remove the symlink and the `Sophie`/`SophieDev` links.
+
 ## Why they don't already share data
 
 Data directory is resolved in `src/environment-remote.ts:20-41`. The relevant bit:
