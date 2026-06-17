@@ -2,7 +2,7 @@ directories:
   app: ./build
   output: ./out
 
-appId: "org.ferdium.ferdium-app"
+appId: "ch.askantis.sophie"
 
 publish:
   provider: github
@@ -15,7 +15,7 @@ snap:
   hooks: ./build-helpers/snap-hooks
   publish:
     provider: snapStore
-  description: 'Ferdium is your cross-platform messaging app / former heir to the throne of Austria-Hungary which brings your chat & messaging services together into one application. For enabling webcam access you need to connect "camera" plug to snap, and for microphone with PulseAudio the "audio-record" plug. This can be done in Snap GUI or via command: `snap connect ferdium:camera; snap connect ferdium:audio-record`.'
+  description: 'Sophie by Askantis is your cross-platform messaging, productivity and AI app — named after Sophie, Duchess of Hohenberg, devoted wife of Archduke Franz Ferdinand (whose name gave us Franz → Ferdium → Sophie). It brings your chat & messaging services together into one application. For enabling webcam access you need to connect "camera" plug to snap, and for microphone with PulseAudio the "audio-record" plug. This can be done in Snap GUI or via command: `snap connect sophie:camera; snap connect sophie:audio-record`.'
 
 nsis:
   perMachine: false
@@ -25,7 +25,7 @@ nsis:
 
 portable:
   artifactName: "${productName}-${os}-Portable-${version}-${arch}.${ext}"
-  unpackDirName: "Ferdium-Unpacked"
+  unpackDirName: "Sophie-Unpacked"
 
 dmg:
   background: ./build-helpers/images/dmgInstaller.tiff
@@ -53,8 +53,8 @@ rpm:
 afterSign: ./build-helpers/notarize.js
 
 protocols:
-  name: Ferdium
-  schemes: [ferdium]
+  name: Sophie
+  schemes: [sophie]
 
 asarUnpack:
   - ./recipes
@@ -91,14 +91,14 @@ win:
     - target: portable
       arch: [x64, ia32, arm64]
   # The name of the CN appearing in the certificate must be present in the publisherName list below
-  publisherName: ["Ferdium Contributors", "Ambroise Grau"]
+  publisherName: ["Askantis"]
   # Remove the verification for a signature to allow auto-update without signed certificate
   verifyUpdateCodeSignature: false
 
 linux:
   icon: ./build-helpers/images/icons
   category: Network;InstantMessaging;
-  executableName: ferdium
+  executableName: sophie
   synopsis: "Messaging app for WhatsApp, Slack, Telegram, Gmail, Google Chat, and many more."
   # Note: Please keep the description as a single-line string, as this will become the Comment in the ferdium.desktop Linux launcher file, which requires a single line.
   description: 'Desktop app bringing all your messaging services into one installable'
