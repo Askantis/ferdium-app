@@ -33,6 +33,7 @@ import ServicesScreen from './containers/settings/ServicesScreen';
 import SettingsWindow from './containers/settings/SettingsWindow';
 import SupportFerdiumScreen from './containers/settings/SupportScreen';
 import TeamScreen from './containers/settings/TeamScreen';
+import { Component as FavoritesScreen } from './features/favorites';
 import { WORKSPACES_ROUTES } from './features/workspaces/constants';
 import EditWorkspaceScreen from './features/workspaces/containers/EditWorkspaceScreen';
 import WorkspacesScreen from './features/workspaces/containers/WorkspacesScreen';
@@ -138,6 +139,10 @@ class FerdiumRoutes extends Component<IProps> {
               <Route
                 path="/settings/recipes/:filter"
                 element={<RecipesScreen {...this.props} />}
+              />
+              <Route
+                path="/settings/favorites"
+                element={<FavoritesScreen {...this.props} />}
               />
               <Route
                 path="/settings/services"

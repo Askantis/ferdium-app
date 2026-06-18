@@ -3,12 +3,8 @@
 .theme__dark .tab-item {
   color: $dark-theme-text-color;
 
-  &.is-active {
-    background: var(--ak-accent-gradient);
-
-    .tab-item__label {
-      color: var(--ak-on-accent);
-    }
+  &.is-active .tab-item__label {
+    color: var(--ak-on-accent);
   }
 
   &.is-disabled .tab-item__icon {
@@ -20,11 +16,31 @@
   display: flex;
   flex-direction: column;
   flex-shrink: 1;
+  align-items: center;
 
   .placeholder {
     height: 40px;
     width: 100%;
   }
+}
+
+// Sophie: pinned Favorites tab (first item in the service-tab column).
+.tab-item--favorites {
+  .tab-item__icon {
+    width: 28px;
+    height: 28px;
+    fill: var(--ak-accent);
+  }
+
+  &.is-active .tab-item__icon {
+    fill: var(--ak-on-accent);
+  }
+}
+
+// In favorites mode the pinned star tab is the active one — don't also paint the
+// underlying (still-active) real service tab as active.
+.mode__favorites .tabs .tab-item.is-active:not(.tab-item--favorites)::before {
+  box-shadow: var(--ak-elevation-soft);
 }
 
 .tab-item {
@@ -38,27 +54,70 @@
   @media (prefers-reduced-motion: no-preference) {
     transition:
       background $theme-transition-time,
-      box-shadow 0.2s ease;
+      box-shadow 0.2s ease,
+      transform 0.15s ease;
   }
-  width: calc(#{$theme-sidebar-width} - 16px);
-  margin: var(--ak-card-gap) 8px;
-  border-radius: var(--ak-radius-card);
+  width: $theme-sidebar-width;
+  cursor: pointer;
 
+  // Card highlight is drawn as an inset pseudo-element so it survives the
+  // appearance injector forcing .tab-item width with !important.
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 8px;
+    border-radius: var(--ak-radius-card);
+    background: var(--ak-surface-card);
+    box-shadow: var(--ak-elevation-soft);
+    z-index: 0;
+    @media (prefers-reduced-motion: no-preference) {
+      transition:
+        background $theme-transition-time,
+        box-shadow 0.2s ease;
+    }
+  }
+
+  .tab-item__icon,
+  .tab-item__label,
+  .tab-item__message-count,
+  .tab-item__info-badge,
+  .tab-item__shortcut-index,
+  .tab-item__error-icon {
+    position: relative;
+    z-index: 1;
+    cursor: pointer;
+  }
+
+  &::before {
+    cursor: pointer;
+  }
+
+  // Modern hover: lift + grow the white card (keep the fill so it doesn't
+  // vanish into the sidebar background).
   &:hover:not(.is-active) {
-    background: var(--ak-surface-tab-hover);
+    transform: scale(1.08);
+
+    &::before {
+      box-shadow: var(--ak-elevation);
+    }
   }
 
   &.is-active {
-    background: var(--ak-accent-gradient);
-    box-shadow: var(--ak-elevation);
+    background: transparent;
+    box-shadow: none;
+
+    // Stay a clean white card (Franz-style) with a Sophie Rose ring; the
+    // active service is mainly expressed by the background gradient it casts.
+    &::before {
+      background: var(--ak-surface-card);
+      box-shadow:
+        0 0 0 2px var(--ak-accent),
+        var(--ak-elevation-soft);
+    }
 
     .tab-item__icon,
     .tab-item__label {
       margin-left: 0px;
-    }
-
-    .tab-item__label {
-      color: var(--ak-on-accent);
     }
   }
 

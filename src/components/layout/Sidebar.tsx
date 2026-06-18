@@ -32,7 +32,6 @@ import {
   todosToggleShortcutKey,
   workspaceToggleShortcutKey,
 } from '../../environment';
-import { state as favoritesState } from '../../features/favorites/store';
 import { todosStore } from '../../features/todos';
 import { todoActions } from '../../features/todos/actions';
 import globalMessages from '../../i18n/globalMessages';
@@ -166,6 +165,7 @@ class Sidebar extends Component<IProps, IState> {
       hideNotificationsButton,
       hideSettingsButton,
       hideDownloadButton,
+      hideFavoritesButton,
       hideSplitModeButton,
       useHorizontalStyle,
       splitMode,
@@ -236,6 +236,35 @@ class Sidebar extends Component<IProps, IState> {
             ) : null}
           </button>
         )}
+        {!hideFavoritesButton && !isMenuCollapsed ? (
+          <button
+            type="button"
+            onClick={() => openSettings({ path: 'favorites' })}
+            className="sidebar__button sidebar__button--favorites"
+            data-tooltip-id="tooltip-sidebar-button"
+            data-tooltip-content="Favorites"
+          >
+            <Icon icon={mdiStar} size={1.5} />
+          </button>
+        ) : null}
+        {!hideWorkspacesButton && !isMenuCollapsed ? (
+          <button
+            type="button"
+            onClick={() => {
+              toggleWorkspaceDrawer();
+              this.updateToolTip();
+            }}
+            className={`sidebar__button sidebar__button--workspaces ${
+              isWorkspaceDrawerOpen ? 'is-active' : ''
+            }`}
+            data-tooltip-id="tooltip-sidebar-button"
+            data-tooltip-content={`${intl.formatMessage(
+              workspaceToggleMessage,
+            )} (${workspaceToggleShortcutKey(false)})`}
+          >
+            <Icon icon={mdiViewGrid} size={1.5} />
+          </button>
+        ) : null}
         {!hideRecipesButton && !isMenuCollapsed ? (
           <button
             type="button"
@@ -267,24 +296,6 @@ class Sidebar extends Component<IProps, IState> {
             )} (${splitModeToggleShortcutKey(false)})`}
           >
             <Icon icon={mdiViewSplitVertical} size={1.5} />
-          </button>
-        ) : null}
-        {!hideWorkspacesButton && !isMenuCollapsed ? (
-          <button
-            type="button"
-            onClick={() => {
-              toggleWorkspaceDrawer();
-              this.updateToolTip();
-            }}
-            className={`sidebar__button sidebar__button--workspaces ${
-              isWorkspaceDrawerOpen ? 'is-active' : ''
-            }`}
-            data-tooltip-id="tooltip-sidebar-button"
-            data-tooltip-content={`${intl.formatMessage(
-              workspaceToggleMessage,
-            )} (${workspaceToggleShortcutKey(false)})`}
-          >
-            <Icon icon={mdiViewGrid} size={1.5} />
           </button>
         ) : null}
         {!hideNotificationsButton && !isMenuCollapsed ? (
@@ -369,20 +380,6 @@ class Sidebar extends Component<IProps, IState> {
             )} (${downloadsShortcutKey(false)})`}
           >
             <Icon icon={mdiDownload} size={1.8} />
-          </button>
-        ) : null}
-
-        {!isMenuCollapsed ? (
-          <button
-            type="button"
-            onClick={() => {
-              favoritesState.isModalVisible = true;
-            }}
-            className="sidebar__button sidebar__button--favorites"
-            data-tooltip-id="tooltip-sidebar-button"
-            data-tooltip-content="Favorites"
-          >
-            <Icon icon={mdiStar} size={1.5} />
           </button>
         ) : null}
 

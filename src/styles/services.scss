@@ -41,6 +41,65 @@
   }
 }
 
+// Sophie: favorites mode — our FavoritesPanel occupies the left 270px and the
+// selected favorite's service webview is force-revealed in the right region
+// (mirrors the split-mode body-class approach above).
+.mode__favorites {
+  .services {
+    // Hide whatever service was active — the Favorites tab is "active" now.
+    .services__webview.is-active {
+      display: none !important;
+    }
+
+    // Reveal the pinned target on the right, beside the panel.
+    .services__webview.is-favorites-pinned {
+      display: block !important;
+      z-index: 100;
+      left: 270px;
+      width: calc(100% - 270px);
+    }
+  }
+
+  // Masks WhatsApp's reload splash + sidebar flash until the conversation is ready.
+  .favorites-loading {
+    position: absolute;
+    top: 0;
+    left: 270px;
+    right: 0;
+    bottom: 0;
+    z-index: 130;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    background: var(--ak-surface-recessed);
+
+    .favorites-loading__spinner {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 3px solid var(--ak-border-soft);
+      border-top-color: var(--ak-accent);
+      animation: ak-fav-spin 0.8s linear infinite;
+    }
+
+    .favorites-loading__text {
+      // height:auto defeats the global `div { height: 100% }` reset, which would
+      // otherwise stretch this and push the spinner to the top.
+      height: auto;
+      font-size: 13px;
+      opacity: 0.6;
+    }
+  }
+}
+
+@keyframes ak-fav-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .services {
   background: var(--ak-surface);
   flex: 1;
@@ -66,6 +125,7 @@
       display: inline-flex;
       height: 100%;
       width: 100%;
+      border-radius: var(--ak-radius-lg);
     }
 
     &.is-active {

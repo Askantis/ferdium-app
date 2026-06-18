@@ -41,6 +41,9 @@ interface IProps extends WrappedComponentProps {
   // isActive?: boolean; // TODO: [TECH DEBT][PROP NOT USED IN COMPONENT] check it
   stores?: RealStores;
   isSpellcheckerEnabled: boolean;
+  // Sophie: force-reveal this service's webview in the right pane while the
+  // pinned Favorites tab is active (see services.scss `.mode__favorites`).
+  isFavoritesPinned?: boolean;
 }
 
 interface IState {
@@ -111,6 +114,7 @@ class ServiceView extends Component<IProps, IState> {
       services__webview: true,
       'services__webview-wrapper': true,
       'is-active': service.isActive,
+      'is-favorites-pinned': this.props.isFavoritesPinned,
       'services__webview--force-repaint': this.state.forceRepaint,
     });
 

@@ -14,7 +14,6 @@ import { mdiFlash, mdiPowerPlug } from '@mdi/js';
 import { Outlet } from 'react-router-dom';
 import { Component as BasicAuth } from '../../features/basicAuth';
 import { Component as PublishDebugInfo } from '../../features/publishDebugInfo';
-import { Component as Favorites } from '../../features/favorites';
 import { Component as QuickSwitch } from '../../features/quickSwitch';
 import { updateVersionParse } from '../../helpers/update-helpers';
 import InfoBar from '../ui/InfoBar';
@@ -234,7 +233,6 @@ class AppLayout extends Component<PropsWithChildren<IProps>, IState> {
                   )}
                 <BasicAuth />
                 <QuickSwitch />
-                <Favorites />
                 <PublishDebugInfo />
                 {services}
                 <Outlet />

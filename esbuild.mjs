@@ -67,6 +67,25 @@ const copyManualAssets = () => {
   fs.copyFileSync('package.json', `${outDir}/package.json`);
   fs.copyFileSync('electron-builder.npmrc', `${outDir}/.npmrc`);
 
+  // Generate the recipe catalogue (all.json) that the recipe store/screen
+  // expects. ferdium-recipes normally produces this in CI; we build it from the
+  // bundled recipe folders so "Available services" works offline.
+  const recipesSrcDir = './recipes/recipes';
+  if (fs.existsSync(recipesSrcDir)) {
+    const allRecipes = [];
+    for (const id of fs.readdirSync(recipesSrcDir)) {
+      const pkgPath = `${recipesSrcDir}/${id}/package.json`;
+      if (fs.existsSync(pkgPath)) {
+        try {
+          allRecipes.push(JSON.parse(fs.readFileSync(pkgPath, 'utf8')));
+        } catch {
+          // skip malformed recipe manifest
+        }
+      }
+    }
+    fsPkg.outputJsonSync(`${outDir}/recipes/all.json`, allRecipes);
+  }
+
   const buildInfoData = {
     timestamp: buildInfo.timestamp,
     gitHashShort: buildInfo.gitHashShort,

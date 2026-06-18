@@ -493,10 +493,20 @@ const generateStyle = (settings, app) => {
 
   const shouldShowDragArea = showDragArea && !isFullScreen;
 
+  // Treat Ferdium's old default accent as "unset" so migrated profiles adopt
+  // Sophie Rose instead of carrying the legacy purple.
+  const legacyDefaultAccents = ['#7367f0', '#7266f0'];
+  const effectiveAccent = legacyDefaultAccents.includes(
+    (accentColor || '').toLowerCase(),
+  )
+    ? DEFAULT_APP_SETTINGS.accentColor
+    : accentColor;
+
   if (
-    accentColor.toLowerCase() !== DEFAULT_APP_SETTINGS.accentColor.toLowerCase()
+    effectiveAccent.toLowerCase() !==
+    DEFAULT_APP_SETTINGS.accentColor.toLowerCase()
   ) {
-    style += generateAccentStyle(accentColor, useHorizontalStyle);
+    style += generateAccentStyle(effectiveAccent, useHorizontalStyle);
   }
 
   style += generateServiceRibbonWidthStyle(
@@ -592,13 +602,14 @@ const sampleIconColor = (url: string): Promise<string | null> =>
         let b = 0;
         let n = 0;
         for (let i = 0; i < data.length; i += 4) {
-          if (data[i + 3] < 32) continue; // skip transparent
           const sum = data[i] + data[i + 1] + data[i + 2];
-          if (sum > 735 || sum < 40) continue; // skip near-white / near-black
-          r += data[i];
-          g += data[i + 1];
-          b += data[i + 2];
-          n += 1;
+          // skip transparent and near-white / near-black pixels
+          if (data[i + 3] >= 32 && sum <= 735 && sum >= 40) {
+            r += data[i];
+            g += data[i + 1];
+            b += data[i + 2];
+            n += 1;
+          }
         }
         resolve(
           n > 0
@@ -620,6 +631,25 @@ const setBackgroundRgb = (rgb: string | null) => {
   } else {
     root.style.removeProperty('--ak-bg-rgb'); // falls back to Sophie Rose
   }
+};
+
+// Centre the ambient gradient on the active service's position in the ribbon,
+// so the colour appears to originate from the activated service.
+const setBackgroundOrigin = () => {
+  const el = document.querySelector('.tab-item.is-active');
+  if (!el) {
+    return;
+  }
+  const rect = el.getBoundingClientRect();
+  const root = document.documentElement;
+  root.style.setProperty(
+    '--ak-bg-x',
+    `${Math.round(rect.left + rect.width / 2)}px`,
+  );
+  root.style.setProperty(
+    '--ak-bg-y',
+    `${Math.round(rect.top + rect.height / 2)}px`,
+  );
 };
 
 export default function initAppearance(stores) {
@@ -681,26 +711,28 @@ export default function initAppearance(stores) {
     { fireImmediately: true },
   );
 
-  // Sophie: tint the ambient background gradient with the active service's icon colour
-  reaction(
-    () => stores.services.active?.icon ?? null,
-    icon => {
-      if (!icon) {
-        setBackgroundRgb(null);
-        return;
-      }
-      if (iconColorCache.has(icon)) {
-        setBackgroundRgb(iconColorCache.get(icon) ?? null);
-        return;
-      }
+  // Sophie: a colour gradient that originates from the active service —
+  // tinted by its icon colour, centred on its position in the ribbon.
+  const applyActiveBackground = () => {
+    const icon = stores.services.active?.icon ?? null;
+    if (!icon) {
+      setBackgroundRgb(null);
+    } else if (iconColorCache.has(icon)) {
+      setBackgroundRgb(iconColorCache.get(icon) ?? null);
+    } else {
       sampleIconColor(icon).then(rgb => {
         iconColorCache.set(icon, rgb);
-        // Only apply if this service is still the active one
         if ((stores.services.active?.icon ?? null) === icon) {
           setBackgroundRgb(rgb);
         }
       });
-    },
+    }
+    requestAnimationFrame(setBackgroundOrigin);
+  };
+
+  reaction(
+    () => stores.services.active?.id ?? null,
+    () => applyActiveBackground(),
     { fireImmediately: true },
   );
 }

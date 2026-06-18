@@ -43,12 +43,13 @@
     }
 
     .settings__section_header {
-      text-align: center;
-      margin-bottom: 40px;
+      text-align: left;
+      color: $dark-theme-gray-lightest;
+      margin: 2px 0 12px;
     }
 
     .settings__main {
-      background: var(--ak-surface);
+      background: var(--ak-surface-recessed);
     }
 
     .settings__body::-webkit-scrollbar-thumb {
@@ -167,6 +168,9 @@
 
 .settings {
   border-radius: var(--ak-radius-lg);
+  overflow: hidden;
+  background: var(--ak-surface);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
   display: flex;
   height: 100%;
   max-height: 720px;
@@ -181,10 +185,9 @@
     flex: 1;
     flex-direction: column;
     height: auto;
-    border-radius: var(--ak-radius-lg);
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
     overflow: hidden;
-    background: var(--ak-surface);
+    // Recessed so the white/dark content cards read as raised panels (Apple look).
+    background: var(--ak-surface-recessed);
   }
 
   .settings__hr {
@@ -196,8 +199,36 @@
   }
 
   .settings__section_header {
-    text-align: center;
-    margin-bottom: 40px;
+    text-align: left;
+    font-size: 14px;
+    font-weight: 600;
+    color: $theme-text-color;
+    margin: 2px 0 12px;
+  }
+
+  // Apple-style grouped content card — wraps each settings tab's body.
+  .settings__card {
+    max-width: 640px;
+    margin: 0 auto 16px;
+    padding: 14px 18px;
+    background: var(--ak-surface-card);
+    border: 1px solid var(--ak-border-soft);
+    border-radius: var(--ak-radius-card);
+    box-shadow: var(--ak-elevation-soft);
+
+    // Later section headers in a multi-section tab become divided sub-sections.
+    .settings__section_header:not(:first-child) {
+      margin-top: 22px;
+      padding-top: 16px;
+      border-top: 1px solid var(--ak-border-soft);
+    }
+
+    // The card + spacing replace the old inline separators.
+    .settings__hr,
+    .settings__hr-sections,
+    hr {
+      display: none;
+    }
   }
 
   .settings__settings-group__apply-color {
@@ -223,8 +254,8 @@
     background: var(--ak-accent-gradient);
     display: flex;
     height: 56px;
-    padding: 0 40px;
-    width: calc(100% - 60px);
+    padding: 0 60px 0 40px;
+    width: 100%;
     color: #fff;
 
     h1 {
@@ -324,25 +355,30 @@
   }
 
   .settings__close {
-    background: $theme-brand-primary;
-    border-left: 1px solid darken($theme-brand-primary, 8%);
+    background: transparent;
     color: #fff;
     font-size: 20px;
-    height: 50px;
-    padding: 0 20px;
+    height: 56px;
+    width: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
     position: absolute;
+    top: 0;
     right: 0;
+    border: none;
+    border-radius: 0;
     @media (prefers-reduced-motion: no-preference) {
       transition: background $theme-transition-time;
     }
-    border-top-right-radius: $theme-border-radius;
     cursor: pointer;
 
     &::before {
       cursor: pointer;
     }
     &:hover {
-      background: darken($theme-brand-primary, 5%);
+      background: rgba(0, 0, 0, 0.14);
     }
   }
 
@@ -568,46 +604,129 @@
 
 .settings-navigation {
   display: flex;
-  background: $theme-gray-lightest;
+  background: var(--ak-surface-recessed);
   flex-direction: column;
-  height: auto;
   width: 240px;
-  height: calc(100% - 100px);
-  align-self: center;
-  border-top-left-radius: $theme-border-radius;
-  border-bottom-left-radius: $theme-border-radius;
+  height: 100%;
   overflow: hidden;
-  box-shadow: 0 20px 50px rgba($dark-theme-black, 0.5);
+  border-right: 1px solid var(--ak-border-soft);
+  padding: 8px 6px;
+
+  .settings-navigation__search-wrap {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    height: 30px;
+    margin: 2px 4px 10px;
+    padding: 0 8px;
+    border-radius: var(--ak-radius);
+    background: var(--ak-surface-tab);
+    color: $theme-gray-light;
+
+    svg {
+      fill: currentColor;
+      width: 15px;
+      height: 15px;
+      flex-shrink: 0;
+    }
+  }
+
+  .settings-navigation__search {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    background: transparent;
+    color: inherit;
+    font-size: 13px;
+    outline: none;
+  }
+
+  // height:auto overrides the global `div { height: 100% }` reset, which would
+  // otherwise stretch each of these to full height and hide the links.
+  .settings-navigation__scroll {
+    flex: 1;
+    min-height: 0;
+    height: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .settings-navigation__group {
+    height: auto;
+    margin-bottom: 10px;
+  }
+
+  .settings-navigation__group-label {
+    height: auto;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: $theme-gray-light;
+    padding: 4px 10px;
+    margin-top: 4px;
+  }
 
   .settings-navigation__link {
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
+    gap: 9px;
     color: $theme-text-color;
     display: flex;
     flex-shrink: 0;
-    height: 51px;
-    padding: 0 20px;
+    height: 32px;
+    margin: 1px 4px;
+    padding: 0 8px;
+    font-size: 13px;
+    border-radius: var(--ak-radius);
     text-decoration: none;
     @media (prefers-reduced-motion: no-preference) {
       transition:
         background $theme-transition-time,
-        color $theme-transition-time;
+        color 0.15s ease;
     }
-    border-bottom: 1px solid darken($theme-gray-lightest, 3%);
 
     &:hover {
-      background: darken($theme-gray-lightest, 8%);
+      background: var(--ak-surface-tab-hover);
     }
 
     &.is-active {
-      background: $theme-brand-primary;
+      background: var(--ak-accent);
       color: #fff;
 
       .badge {
         background: #fff;
-        color: $theme-brand-primary;
+        color: var(--ak-accent);
       }
     }
+  }
+
+  .settings-navigation__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+
+    svg {
+      width: 14px;
+      height: 14px;
+      fill: #fff;
+    }
+  }
+
+  .settings-navigation__logout {
+    margin-top: 6px;
+  }
+
+  .settings-navigation__label {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .settings-navigation__expander {

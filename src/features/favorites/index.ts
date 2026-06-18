@@ -1,16 +1,19 @@
-import { state as ModalState } from './store';
-
+// Favorites: a Settings screen (Component.tsx) manages the list; the pinned
+// Favorites ribbon tab enters "favorites mode" (FavoritesPanel on the left +
+// the real WhatsApp chat on the right). initFavorites() wires up the mode
+// controller (reactions + injection); it's called from FeaturesStore.
 export { default as Component } from './Component';
-
-const debug = require('../../preload-safe-debug')('Ferdium:feature:favorites');
-
-export default function initialize() {
-  debug('Initialize favorites feature');
-
-  window['ferdium'].features.favorites = {
-    state: ModalState,
-    showModal: (): void => {
-      ModalState.isModalVisible = true;
-    },
-  };
-}
+export { default as FavoritesPanel } from './FavoritesPanel';
+export {
+  type Favorite,
+  addFavorite,
+  favoritesMode,
+  getFavorites,
+  removeFavorite,
+} from './store';
+export {
+  default as initFavorites,
+  enterFavorites,
+  exitFavorites,
+  selectFavorite,
+} from './controller';

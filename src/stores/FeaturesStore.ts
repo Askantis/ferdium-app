@@ -11,7 +11,7 @@ import type { ApiInterface } from '../api';
 import appearance from '../features/appearance';
 import basicAuth from '../features/basicAuth';
 import communityRecipes from '../features/communityRecipes';
-import favorites from '../features/favorites';
+import { initFavorites } from '../features/favorites';
 import publishDebugInfo from '../features/publishDebugInfo';
 import quickSwitch from '../features/quickSwitch';
 import serviceProxy from '../features/serviceProxy';
@@ -85,10 +85,10 @@ export default class FeaturesStore extends TypedStore {
     basicAuth();
     workspaces(this.stores, this.actions);
     quickSwitch();
-    favorites();
     publishDebugInfo();
     communityRecipes(this.stores, this.actions);
     todos(this.stores, this.actions);
     appearance(this.stores);
+    initFavorites(this.stores, this.actions);
   }
 }

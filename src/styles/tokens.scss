@@ -33,11 +33,14 @@
   // --ak-bg-rgb is swapped at runtime to the active service's icon colour (Phase 2);
   // defaults to Sophie Rose. Kept soft so cards + text stay legible.
   --ak-bg-rgb: var(--ak-accent-rgb);
-  --ak-bg-gradient: linear-gradient(
-    160deg,
-    rgba(var(--ak-bg-rgb), 0.1) 0%,
-    rgba(var(--ak-bg-rgb), 0.03) 55%,
-    rgba(var(--ak-bg-rgb), 0) 100%
+  --ak-bg-x: 34px; // updated at runtime to the active service's position
+  --ak-bg-y: 140px;
+  --ak-bg-gradient: radial-gradient(
+    150% 140% at var(--ak-bg-x) var(--ak-bg-y),
+    rgba(var(--ak-bg-rgb), 0.42) 0%,
+    rgba(var(--ak-bg-rgb), 0.18) 38%,
+    rgba(var(--ak-bg-rgb), 0.08) 72%,
+    rgba(var(--ak-bg-rgb), 0.03) 100%
   );
 }
 
@@ -52,10 +55,11 @@
   --ak-elevation: 0 4px 14px rgba(0, 0, 0, 0.45);
   --ak-elevation-soft: 0 2px 10px rgba(0, 0, 0, 0.35);
 
-  --ak-bg-gradient: linear-gradient(
-    160deg,
-    rgba(var(--ak-bg-rgb), 0.18) 0%,
-    rgba(var(--ak-bg-rgb), 0.05) 55%,
-    rgba(var(--ak-bg-rgb), 0) 100%
+  --ak-bg-gradient: radial-gradient(
+    150% 140% at var(--ak-bg-x) var(--ak-bg-y),
+    rgba(var(--ak-bg-rgb), 0.5) 0%,
+    rgba(var(--ak-bg-rgb), 0.22) 40%,
+    rgba(var(--ak-bg-rgb), 0.1) 74%,
+    rgba(var(--ak-bg-rgb), 0.04) 100%
   );
 }

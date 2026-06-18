@@ -1,8 +1,16 @@
+import { mdiStar } from '@mdi/js';
+import classnames from 'classnames';
 import { observer } from 'mobx-react';
 import { Component } from 'react';
 import { SortableContainer } from 'react-sortable-hoc';
 
+import {
+  enterFavorites,
+  favoritesMode,
+  getFavorites,
+} from '../../../features/favorites';
 import type Service from '../../../models/Service';
+import Icon from '../../ui/icon';
 import TabItem from './TabItem';
 
 interface IProps {
@@ -48,6 +56,23 @@ class TabBarSortableList extends Component<IProps> {
 
     return (
       <ul className="tabs">
+        {getFavorites().length > 0 && (
+          // Non-sortable pinned Favorites tab — first item in the same column.
+          // Mirrors the existing service tab <li>; keyboard nav is via shortcuts.
+          // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/click-events-have-key-events
+          <li
+            className={classnames({
+              'tab-item': true,
+              'tab-item--favorites': true,
+              'is-active': favoritesMode.isActive,
+            })}
+            onClick={() => enterFavorites()}
+            data-tooltip-id="tooltip-sidebar-button"
+            data-tooltip-content="Favorites"
+          >
+            <Icon icon={mdiStar} className="tab-item__icon" size={1} />
+          </li>
+        )}
         {services.map((service, index) => (
           <TabItem
             key={service.id}

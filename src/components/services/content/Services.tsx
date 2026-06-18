@@ -9,6 +9,7 @@ import {
 } from 'react-intl';
 import withStyles, { type WithStylesProps } from 'react-jss';
 import { Link } from 'react-router-dom';
+import { FavoritesPanel, favoritesMode } from '../../../features/favorites';
 import type Service from '../../../models/Service';
 import Appear from '../../ui/effects/Appear';
 import ServiceView from './ServiceView';
@@ -107,6 +108,10 @@ class Services extends Component<IProps, IState> {
 
     const { showConfetti } = this.state;
 
+    const favoritesPinnedId = favoritesMode.isActive
+      ? favoritesMode.targetServiceId
+      : null;
+
     return (
       <div className="services">
         {userHasCompletedSignup && (
@@ -156,8 +161,16 @@ class Services extends Component<IProps, IState> {
                 })
               }
               isSpellcheckerEnabled={isSpellcheckerEnabled}
+              isFavoritesPinned={service.id === favoritesPinnedId}
             />
           ))}
+        <FavoritesPanel />
+        {favoritesMode.isActive && favoritesMode.isLoading && (
+          <div className="favorites-loading">
+            <div className="favorites-loading__spinner" />
+            <div className="favorites-loading__text">Opening chat…</div>
+          </div>
+        )}
       </div>
     );
   }

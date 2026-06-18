@@ -611,6 +611,7 @@ export const DEFAULT_APP_SETTINGS = {
   hideNotificationsButton: false,
   hideSettingsButton: false,
   hideDownloadButton: false,
+  hideFavoritesButton: false,
   alwaysShowWorkspaces: false,
   useCompactWorkspaceDrawer: false,
   hideAllServicesWorkspace: false,

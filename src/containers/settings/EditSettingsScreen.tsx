@@ -268,6 +268,10 @@ const messages = defineMessages({
     id: 'settings.app.form.hideDownloadButton',
     defaultMessage: 'Hide Downloads button',
   },
+  hideFavoritesButton: {
+    id: 'settings.app.form.hideFavoritesButton',
+    defaultMessage: 'Hide Favorites button',
+  },
   alwaysShowWorkspaces: {
     id: 'settings.app.form.alwaysShowWorkspaces',
     defaultMessage: 'Always show workspace drawer',
@@ -482,6 +486,7 @@ class EditSettingsScreen extends Component<
       hideNotificationsButton: Boolean(settingsData.hideNotificationsButton),
       hideSettingsButton: Boolean(settingsData.hideSettingsButton),
       hideDownloadButton: Boolean(settingsData.hideDownloadButton),
+      hideFavoritesButton: Boolean(settingsData.hideFavoritesButton),
       alwaysShowWorkspaces: Boolean(settingsData.alwaysShowWorkspaces),
       useCompactWorkspaceDrawer: Boolean(
         settingsData.useCompactWorkspaceDrawer,
@@ -1249,6 +1254,15 @@ class EditSettingsScreen extends Component<
             DEFAULT_APP_SETTINGS.hideDownloadButton,
           ),
           default: DEFAULT_APP_SETTINGS.hideDownloadButton,
+          type: 'checkbox',
+        },
+        hideFavoritesButton: {
+          label: intl.formatMessage(messages.hideFavoritesButton),
+          value: ifUndefined<boolean>(
+            settings.all.app.hideFavoritesButton,
+            DEFAULT_APP_SETTINGS.hideFavoritesButton,
+          ),
+          default: DEFAULT_APP_SETTINGS.hideFavoritesButton,
           type: 'checkbox',
         },
         alwaysShowWorkspaces: {

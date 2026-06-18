@@ -1,6 +1,7 @@
 import { observer } from 'mobx-react';
 import { Component } from 'react';
 
+import { exitFavorites } from '../../../features/favorites';
 import type Service from '../../../models/Service';
 import TabBarSortableList from './TabBarSortableList';
 
@@ -81,8 +82,14 @@ class TabBar extends Component<IProps> {
 
   lastWheelAt = 0;
 
+  // Activating a real service tab always leaves favorites mode.
+  handleSetActive = (args: { serviceId: string }) => {
+    exitFavorites();
+    this.props.setActive(args);
+  };
+
   handleWheel = (event: { deltaX: number; deltaY: number }) => {
-    const { services, setActive } = this.props;
+    const { services } = this.props;
     if (!services || services.length < 2) {
       return;
     }
@@ -99,13 +106,12 @@ class TabBar extends Component<IProps> {
     const activeIndex = services.findIndex(s => s.isActive);
     const base = activeIndex === -1 ? 0 : activeIndex;
     const nextIndex = (base + dir + services.length) % services.length;
-    setActive({ serviceId: services[nextIndex].id });
+    this.handleSetActive({ serviceId: services[nextIndex].id });
   };
 
   render() {
     const {
       services,
-      setActive,
       openSettings,
       disableToolTip,
       reload,
@@ -127,7 +133,7 @@ class TabBar extends Component<IProps> {
         <TabBarSortableList
           // @ts-expect-error Fix me
           services={services}
-          setActive={setActive}
+          setActive={this.handleSetActive}
           onSortEnd={this.onSortEnd}
           onSortStart={disableToolTip}
           shouldCancelStart={this.shouldPreventSorting}

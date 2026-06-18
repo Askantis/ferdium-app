@@ -4,7 +4,8 @@
 // user can review and hit enter. Auto-send is intentionally left out for now.
 import type { Favorite } from './store';
 
-const digitsOnly = (value: string): string => (value || '').replace(/\D/g, '');
+const digitsOnly = (value: string): string =>
+  (value || '').replaceAll(/\D/g, '');
 
 // Returns a deep link that opens the conversation (with text pre-filled where
 // the service supports it), or null if the service has no usable deep link.
@@ -15,12 +16,15 @@ export const buildDeepLink = (
 ): string | null => {
   const encoded = encodeURIComponent(text || '');
   switch (recipeId) {
-    case 'whatsapp':
+    case 'whatsapp': {
       return `https://web.whatsapp.com/send?phone=${digitsOnly(target)}&text=${encoded}`;
-    case 'telegram':
+    }
+    case 'telegram': {
       return `https://web.telegram.org/a/#${encodeURIComponent(target)}`;
-    default:
+    }
+    default: {
       return null;
+    }
   }
 };
 
@@ -52,3 +56,12 @@ export const sendToFavorite = (
   }
   return true;
 };
+
+// Open the favorite's conversation in its (real) service webview — used by the
+// Favorites quick-access drawer. Same path as sendToFavorite but with no text:
+// the deep link just opens the chat, and the user interacts natively (incl. media).
+export const openFavorite = (
+  stores: any,
+  actions: any,
+  favorite: Favorite,
+): boolean => sendToFavorite(stores, actions, favorite, '');

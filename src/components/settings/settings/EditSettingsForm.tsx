@@ -650,7 +650,7 @@ class EditSettingsForm extends Component<IProps, IState> {
 
             {/* General */}
             {this.state.activeSetttingsTab === 'general' && (
-              <div>
+              <div className="settings__card">
                 <H2 className="settings__section_header">
                   {intl.formatMessage(messages.sectionMain)}
                 </H2>
@@ -763,7 +763,7 @@ class EditSettingsForm extends Component<IProps, IState> {
 
             {/* Services */}
             {this.state.activeSetttingsTab === 'services' && (
-              <div>
+              <div className="settings__card">
                 <H2 className="settings__section_header">
                   {intl.formatMessage(messages.sectionServiceIconsSettings)}
                 </H2>
@@ -849,7 +849,7 @@ class EditSettingsForm extends Component<IProps, IState> {
 
             {/* Appearance */}
             {this.state.activeSetttingsTab === 'appearance' && (
-              <div>
+              <div className="settings__card">
                 <H2 className="settings__section_header">
                   {intl.formatMessage(messages.sectionGeneralUi)}
                 </H2>
@@ -955,6 +955,8 @@ class EditSettingsForm extends Component<IProps, IState> {
 
                 <Toggle {...form.$('hideDownloadButton').bind()} />
 
+                <Toggle {...form.$('hideFavoritesButton').bind()} />
+
                 <Toggle {...form.$('alwaysShowWorkspaces').bind()} />
 
                 <Toggle {...form.$('useCompactWorkspaceDrawer').bind()} />
@@ -965,7 +967,7 @@ class EditSettingsForm extends Component<IProps, IState> {
 
             {/* Privacy */}
             {this.state.activeSetttingsTab === 'privacy' && (
-              <div>
+              <div className="settings__card">
                 <H2 className="settings__section_header">
                   {intl.formatMessage(messages.sectionPrivacy)}
                 </H2>
@@ -1056,7 +1058,7 @@ class EditSettingsForm extends Component<IProps, IState> {
 
             {/* Language */}
             {this.state.activeSetttingsTab === 'language' && (
-              <div>
+              <div className="settings__card">
                 <H2 className="settings__section_header">
                   {intl.formatMessage(messages.sectionLanguage)}
                 </H2>
@@ -1106,7 +1108,7 @@ class EditSettingsForm extends Component<IProps, IState> {
 
             {/* Advanced */}
             {this.state.activeSetttingsTab === 'advanced' && (
-              <div>
+              <div className="settings__card">
                 <H2 className="settings__section_header">
                   {intl.formatMessage(messages.sectionAdvanced)}
                 </H2>
@@ -1308,7 +1310,7 @@ class EditSettingsForm extends Component<IProps, IState> {
 
             {/* Updates */}
             {this.state.activeSetttingsTab === 'updates' && (
-              <div>
+              <div className="settings__card">
                 <H2 className="settings__section_header">
                   {intl.formatMessage(messages.sectionUpdates)}
                 </H2>

@@ -35,7 +35,13 @@ class RecipesScreen extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
 
-    this.customRecipes = readJsonSync(asarRecipesPath('all.json'));
+    try {
+      this.customRecipes = readJsonSync(asarRecipesPath('all.json'));
+    } catch {
+      // all.json may be absent — don't crash the whole settings panel; the
+      // recipe catalogue still loads via the API / generated catalogue.
+      this.customRecipes = [];
+    }
     this.state = {
       needle: null,
       currentFilter: 'featured',

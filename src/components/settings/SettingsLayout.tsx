@@ -6,7 +6,7 @@ import {
   defineMessages,
   injectIntl,
 } from 'react-intl';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { isEscapeKeyPress } from '../../jsUtils';
 import Appear from '../ui/effects/Appear';
 import Icon from '../ui/icon';
@@ -22,6 +22,18 @@ const messages = defineMessages({
 interface IProps extends WrappedComponentProps {
   navigation: ReactElement;
   closeSettings: () => void;
+}
+
+// Wrap only the Outlet so a thrown error in a settings screen doesn't take
+// down the navigation too. Keying by pathname remounts (resets) the boundary
+// on navigation, so the user can always click away from an error screen.
+function SettingsOutlet(): ReactElement {
+  const location = useLocation();
+  return (
+    <ErrorBoundary key={location.pathname}>
+      <Outlet />
+    </ErrorBoundary>
+  );
 }
 
 @observer
@@ -52,26 +64,24 @@ class SettingsLayout extends Component<PropsWithChildren<IProps>> {
     return (
       <Appear transitionName="fadeIn-fast">
         <div className="settings-wrapper">
-          <ErrorBoundary>
+          <button
+            type="button"
+            className="settings-wrapper__action"
+            onClick={closeSettings}
+            aria-label={intl.formatMessage(messages.closeSettings)}
+          />
+          <div className="settings franz-form">
+            {navigation}
+            <SettingsOutlet />
             <button
               type="button"
-              className="settings-wrapper__action"
+              className="settings__close"
               onClick={closeSettings}
               aria-label={intl.formatMessage(messages.closeSettings)}
-            />
-            <div className="settings franz-form">
-              {navigation}
-              <Outlet />
-              <button
-                type="button"
-                className="settings__close"
-                onClick={closeSettings}
-                aria-label={intl.formatMessage(messages.closeSettings)}
-              >
-                <Icon icon={mdiClose} size={1.35} />
-              </button>
-            </div>
-          </ErrorBoundary>
+            >
+              <Icon icon={mdiClose} size={1.35} />
+            </button>
+          </div>
         </div>
       </Appear>
     );
