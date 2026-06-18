@@ -9,6 +9,9 @@ const digitsOnly = (value: string): string =>
 
 // Returns a deep link that opens the conversation (with text pre-filled where
 // the service supports it), or null if the service has no usable deep link.
+// TODO[whatsapp]: EXPERIMENTAL — these per-service URL formats are external and
+// can change; keep them in sync with the services (only WhatsApp is exercised by
+// the Favorites view today). Add a new `case` per service to extend support.
 export const buildDeepLink = (
   recipeId: string,
   target: string,

@@ -15,6 +15,7 @@ import injectSheet, { type WithStylesProps } from 'react-jss';
 import { SortableElement } from 'react-sortable-hoc';
 import type { Stores } from '../../../@types/stores.types';
 import { altKey, cmdOrCtrlShortcutKey, shiftKey } from '../../../environment';
+import { favoritesMode } from '../../../features/favorites/store';
 import globalMessages from '../../../i18n/globalMessages';
 import type Service from '../../../models/Service';
 import Icon from '../../ui/icon';
@@ -364,7 +365,10 @@ class TabItem extends Component<IProps, IState> {
     const showMediaBadge =
       service.isMediaBadgeEnabled &&
       service.isMediaPlaying &&
-      service.isEnabled;
+      service.isEnabled &&
+      // Don't show the media/sound badge for the service currently mirrored in
+      // the Favorites view (WhatsApp's reconnect chime would light it up).
+      !(favoritesMode.isActive && favoritesMode.targetServiceId === service.id);
     const mediaBadge = (
       <Icon icon={mdiVolumeSource} className="tab-item__icon" />
     );

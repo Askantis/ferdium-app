@@ -92,6 +92,14 @@ const copyManualAssets = () => {
     gitBranch: buildInfo.gitBranch,
   };
   fsPkg.outputJsonSync(`${outDir}/buildInfo.json`, buildInfoData);
+
+  // Ship the wa-js (WhatsApp Web functions) browser bundle so the Favorites
+  // feature can inject it for instant in-app chat switching (no full reload).
+  const waJsSrc = './node_modules/@wppconnect/wa-js/dist/wppconnect-wa.js';
+  if (fs.existsSync(waJsSrc)) {
+    fs.mkdirSync(`${outDir}/vendor`, { recursive: true });
+    fs.copyFileSync(waJsSrc, `${outDir}/vendor/wppconnect-wa.js`);
+  }
 };
 
 const runEsbuild = async () => {
